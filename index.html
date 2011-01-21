@@ -1,0 +1,45 @@
+<html>
+	<head>
+	<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		<script type="text/javascript" src="/scripts/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/scripts/main.js"/></script>
+	</head>
+	<body>
+	<div class="causas">
+		<h3>Causas encontradas</h3>
+		<div class="causa novacausa" style="display:none">
+			<b class="autor">{% if currentUser %} {{ currentUser.nickname }}{% else %}An&ocirc;nimo{% endif %}</b> :
+			<a class="desc"></a>
+		</div>
+		{% for cause in existingCauses %}
+			<div class="causa" issueid="{{ cause.key.id }}">
+				<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}</b> :
+				<a class="desc">{{ cause.desc|escape }}</a>
+				<a class="agree">({{ cause.agreedBy }})</a>
+			</div>
+		{% endfor %}
+	</div>
+
+	
+	{% if issue.causedIssue %}
+	
+	<h3>Causa original</h3>
+	<div class="causado" issueid="{{ issue.causedIssue.key.id }}">
+		<b class="autor">{% if issue.causedIssue.author %} {{ issue.causedIssue.author.nickname }}{% else %}An&ocirc;nimo{% endif %}</b> :
+		<a class="desc">{{ issue.causedIssue.desc|escape }}</a>
+	</div>
+	{% endif %}
+	
+	
+	<div class="content">
+		<h2>Porque {{ issue.desc }}?</h2>
+		<b class="autor" style="float:right; margin-bottom:5px">({% if issue.author %} {{ issue.author.nickname }}{% else %}An&ocirc;nimo{% endif %})</b>
+		<form action="/newIssue" method="post">
+		<div><textarea name="newCause" maxlength="90"></textarea></div>
+		<div><input type="submit" value="Enviar"/></div>
+		{% if issue.is_saved %}<input name="parentIssueKey" type="hidden" value="{{ issue.key.id }}"/>{% endif %}
+		</form>
+	</div>
+	
+	</body>
+</html>
