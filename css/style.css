@@ -6,6 +6,7 @@ body {
 }
 #container{
 	width:95%;
+	max-width:1000px;
 }
 
 #leftpanel{
@@ -20,8 +21,28 @@ body {
 	margin: 0;
 }
 
+#next{
+	float:right;
+	background: #67B;
+	position: relative;
+	right: -8px;
+	top: -8px;
+	padding:5px;
+	
+	/* CSS 3.0 */
+	border-bottom-left-radius: 10px 10px;
+	border-top-right-radius: 7px 7px;
+	
+	/* FIREFOX HACK */
+	-moz-border-radius: 0px 7px 0px 10px;
+}
 
-.pergunta{
+#next a{
+	color: #6D7;
+	font-weight: bold;
+}
+
+#pergunta{
 	margin-left: 270px;
 	border-left: 1px solid gray;
 	margin-right: 270px;
@@ -33,18 +54,26 @@ body {
 	margin-top: 30px;
 	padding: 10px;
 	background-color: #89D;
+	
+	/* CSS 3.0 */
 	border-bottom-left-radius: 7px 7px;
 	border-bottom-right-radius: 30px 20px;
 	border-top-left-radius: 30px 20px;
 	border-top-right-radius: 7px 7px;
 	box-shadow: 10px 10px 12px #444; 
+	
+	/* FIREFOX HACK */
+	-moz-border-radius: 30px 7px 30px 7px;
+	-moz-box-shadow: 10px 10px 12px #444; 
+	
+	/* WEBKIT HACK */ 
 	-webkit-box-shadow: 10px 10px 12px #444;
 }
 
-.pergunta form{
+#pergunta form{
 	padding:10px;
 }
-.pergunta textarea{
+#pergunta textarea{
 	font-size:25px;
 	height:70px;
 }
@@ -67,6 +96,7 @@ h2{
 .tittle{
 	color:#DDD;
 	margin:10px;
+	font-size:20px;
 }
 
 form textarea{
@@ -77,15 +107,24 @@ form textarea{
 
 .causa{
 	background-color: #89D;
+	margin-bottom: 5px;
+	padding: 10px;
+	width: 95%;
+	
+	/* CSS 3.0 */
 	border-bottom-left-radius: 5px 5px;
 	border-bottom-right-radius: 20px 10px;
 	border-top-left-radius: 20px 10px;
 	border-top-right-radius: 5px 5px;
 	box-shadow: 3px 3px 7px #777;
+	
+	/* FIREFOX HACK */
+	-moz-border-radius: 20px 5px 20px 5px;
+	-moz-box-shadow: 3px 3px 7px #333; 
+	
+	/* WEBKIT HACK */ 
 	-webkit-box-shadow:3px 3px 7px #333; 
-	margin-bottom: 5px;
-	padding: 10px;
-	width: 95%;
+	
 }
 
 .autor{
@@ -93,11 +132,10 @@ form textarea{
 	font-style:italic;
 }
 
-.desc:hover{
+.descHover{
 	color: #922;
 	cursor:pointer;
 }
-
 .login{
 	position:absolute;
 	top:5px;
@@ -126,13 +164,22 @@ form textarea{
 }
 .causado{
 	background-color: #D89;
+	padding: 10px;
+
+	/* CSS 3.0 */
 	border-bottom-left-radius: 5px 5px;
 	border-bottom-right-radius: 20px 10px;
 	border-top-left-radius: 20px 10px;
 	border-top-right-radius: 5px 5px;
 	box-shadow: 3px 3px 7px #777;
+	
+	/* FIREFOX HACK */
+	-moz-border-radius: 20px 5px 20px 5px;
+	-moz-box-shadow: 3px 3px 7px #777;
+	
+	/* WEBKIT HACK */ 
 	-webkit-box-shadow:3px 3px 7px #333; 
-	padding: 10px;
+	
 }
 
 .agree{
@@ -140,8 +187,17 @@ form textarea{
 	-moz-border-radius: 10px;
 	padding: 3px;
 	background-color: #9A9;
+	float:right;
+	position:relative;
+	top:-12px;
 }
-.agree:hover{
+
+.agreeHover{
 	background-color: #9F9;
 	cursor:pointer;
+}
+
+.mail i{
+	color:#444;
+	font-size: 10px;
 }

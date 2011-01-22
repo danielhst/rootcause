@@ -29,21 +29,32 @@
 			</div>
 			{% for cause in existingCauses %}
 				<div class="causa" issueid="{{ cause.key.id }}">
-					<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
-					<a class="desc">{{ cause.desc|escape }}</a>
-					<a class="agree" title="Concordo!">({{ cause.agreedBy }})</a>
+					<div>
+						<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
+						<a class="desc">{{ cause.desc|escape }}</a>
+					</div>
+					<div>
+						<a class="agree" title="Concordo!">({{ cause.agreedBy }})</a>
+					</div>
 				</div>
 			{% endfor %}
 		</div>
 
 		
-		<div class="pergunta">
+		<div id="pergunta">
+			<div id="next"><a  href ="/" >Outra pergunta >></a></div>
+			<br/>
 			<h2>Porque {{ issue.desc }}?</h2>
-			<b class="autor" style="float:right; margin-bottom:5px">({% if issue.author %} {{ issue.author.nickname }}{% else %}An&ocirc;nimo{% endif %}):</b>
+			<b class="autor" style="float:right; margin-bottom:5px">({% if issue.author %} {{ issue.author.nickname }}{% else %}An&ocirc;nimo{% endif %})</b>
 			<i class="timesasked" >j&aacute; perguntado {{ issue.totalAsked }} vezes</i>
 			<form action="/newIssue" method="post">
 			<div><textarea name="newCause" maxlength="90"></textarea></div>
 			<div><input type="submit" class="button" value="Enviar"/></div>
+			<div class="mail">
+				<a href="mailto:rootcauserio@gmail.com">o que voc&ecirc; achou?</a>
+				<br/>
+				<i>rootcauserio@gmail.com</i>
+			</div>
 			{% if issue.is_saved %}<input name="parentIssueKey" type="hidden" value="{{ issue.key.id }}"/>{% endif %}
 			</form>
 		</div>

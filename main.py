@@ -25,14 +25,13 @@ def error(handler, message):
 		
 class MainPage(webapp.RequestHandler):
     def get(self):
-		query = Issue.all().order('priority')
-		totalIssues = query.count(1)
-		if totalIssues == 0:
+		randIndex = random.randint(1, 10)
+		issue = Issue.all().order('priority').fetch(randIndex, randIndex + 1 )[0]
+		if not issue:
 			issue = Issue()
-			issue.desc = "voc&ecirc; est&aacute; aqui"
-			existingCauses = query
+			issue.desc = "voc&ecirc; est&aacute; aqui!"
+			existingCauses = None
 		else:
-			issue = query.get()
 			existingCauses = Issue.gql("WHERE causedIssue = :1 ORDER BY agreedBy DESC LIMIT 10", issue )
 			issue.totalAsked += 1
 			issue.priority += 1 # lower the priority every time it is viewed
