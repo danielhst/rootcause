@@ -30,7 +30,7 @@ class MainPage(webapp.RequestHandler):
 		if totalIssues == 0:
 			issue = Issue()
 			issue.desc = "voc&ecirc; est&aacute; aqui"
-			existingCauses = relevantIssues
+			existingCauses = query
 		else:
 			issue = query.get()
 			existingCauses = Issue.gql("WHERE causedIssue = :1 ORDER BY agreedBy DESC LIMIT 10", issue )
@@ -38,10 +38,57 @@ class MainPage(webapp.RequestHandler):
 			issue.priority += 1 # lower the priority every time it is viewed
 			issue.put()
 		
+		if users.get_current_user():
+			url = users.create_logout_url(self.request.uri)
+			url_linktext = 'Logout'
+		else:
+			url = users.create_login_url(self.request.uri)
+			url_linktext = 'Login'
+      
 		template_values={
 			'issue': issue,
 			'existingCauses' : existingCauses,
 			'currentUser' : users.get_current_user(),
+			'url': url,
+			'url_linktext': url_linktext,
+			}
+
+		path = os.path.join(os.path.dirname(__file__), 'index.html')
+		self.response.out.write(template.render(path, template_values))
+
+
+class Item(webapp.RequestHandler):
+	def get(self):
+		key = db.Key.from_path('Issue',int(self.request.get("id")))
+		issue = db.get(key)
+		
+		if not issue: 
+			error(self, "N&atilde;o foi poss&iacute;vel achar o item " + str( self.request.get("id") ) )
+			return
+			
+		existingCauses = Issue.gql("WHERE causedIssue = :1 ORDER BY agreedBy DESC LIMIT 10", issue )
+		
+		issue.totalAsked += 1
+		issue.priority += 1 # lower the priority every time it is viewed
+		issue.put()
+		
+		if users.get_current_user():
+			url = users.create_logout_url(self.request.uri)
+			url_linktext = 'Logout'
+			login_header = "logado como " + users.get_current_user().nickname()
+		else:
+			url = users.create_login_url(self.request.uri)
+			url_linktext = 'Login'
+			login_header = "voc&ecirc; est&aacute; An&ocirc;nimo"
+		
+		template_values={
+			'issue': issue,
+			'issue_id' : issue.key().id(),
+			'existingCauses' : existingCauses,
+			'currentUser' : users.get_current_user(),
+			'url': url,
+			'url_linktext': url_linktext,
+			'login_header': login_header,
 			}
 
 		path = os.path.join(os.path.dirname(__file__), 'index.html')
@@ -62,29 +109,6 @@ class Agree(webapp.RequestHandler):
 		print 'Content-Type: text/plain'
 		print issue.agreedBy
 		
-class Item(webapp.RequestHandler):
-	def get(self):
-		key = db.Key.from_path('Issue',int(self.request.get("id")))
-		issue = db.get(key)
-		
-		if not issue: 
-			error(self, "N&atilde;o foi poss&iacute;vel achar o item " + str( self.request.get("id") ) )
-			return
-			
-		existingCauses = Issue.gql("WHERE causedIssue = :1 ORDER BY agreedBy DESC LIMIT 10", issue )
-		
-		issue.totalAsked += 1
-		issue.priority += 1 # lower the priority every time it is viewed
-		issue.put()
-		
-		template_values={
-			'issue': issue,
-			'issue_id' : issue.key().id(),
-			'existingCauses' : existingCauses,
-			}
-
-		path = os.path.join(os.path.dirname(__file__), 'index.html')
-		self.response.out.write(template.render(path, template_values))
 		
 class NewIssue(webapp.RequestHandler):
 	def post(self):
