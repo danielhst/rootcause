@@ -127,6 +127,10 @@ class NewIssue(webapp.RequestHandler):
 		issue.put()
 		self.redirect('/issue?id=' + str( issue.key().id() ))
 
+class Tree(webapp.RequestHandler):		
+	def get(self):
+		
+		
 application = webapp.WSGIApplication([('/', MainPage),
 									('/newIssue', NewIssue),
 									('/agree', Agree),

@@ -29,7 +29,7 @@
 			</div>
 			{% for cause in existingCauses %}
 				<div class="causa" issueid="{{ cause.key.id }}">
-					<div>
+					<div style="width:90%">
 						<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
 						<a class="desc">{{ cause.desc|escape }}</a>
 					</div>
