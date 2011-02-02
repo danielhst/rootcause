@@ -27,8 +27,35 @@ def error(handler, message):
 	path = os.path.join(os.path.dirname(__file__), 'error.html')
 	handler.response.out.write(template.render(path, {'message': message,}))
 
+def addLoginValues(handler,values):
+	if users.get_current_user():
+		url = users.create_logout_url(handler.request.uri)
+		url_linktext = 'Logout'
+		login_header = "logado como " + users.get_current_user().nickname()
+	else:
+		url = users.create_login_url(handler.request.uri)
+		url_linktext = 'Login'
+		login_header = "voc&ecirc; est&aacute; An&ocirc;nimo"
+	
+	values["login_url"] = url 
+	values["login_linktext"] = url_linktext 
+	values["login_header"] = login_header 
+	values["currentUser"] = users.get_current_user() 
+		
 		
 class MainPage(webapp.RequestHandler):
+	def get(self):
+		page = self.request.get("page")
+		if not page:
+			page = 0
+		issues = Issue.all().order('totalCauses').fetch(page * 50, (page + 1) * 50)
+		template_values={
+			'issues': issues,
+			}
+		path = os.path.join(os.path.dirname(__file__), 'panel.html')
+		self.response.out.write(template.render(path, template_values))
+		
+class Random(webapp.RequestHandler):
     def get(self):
 		randIndex = random.randint(1, 10)
 		issue = Issue.all().order('priority').fetch(randIndex, randIndex + 1 )[0]
@@ -42,22 +69,14 @@ class MainPage(webapp.RequestHandler):
 			issue.priority += 1 # lower the priority every time it is viewed
 			issue.put()
 		
-		if users.get_current_user():
-			url = users.create_logout_url(self.request.uri)
-			url_linktext = 'Logout'
-		else:
-			url = users.create_login_url(self.request.uri)
-			url_linktext = 'Login'
-      
 		template_values={
 			'issue': issue,
 			'existingCauses' : existingCauses,
-			'currentUser' : users.get_current_user(),
-			'url': url,
-			'url_linktext': url_linktext,
 			}
-
-		path = os.path.join(os.path.dirname(__file__), 'index.html')
+		
+		addLoginValues(self, template_values)
+		
+		path = os.path.join(os.path.dirname(__file__), 'issue.html')
 		self.response.out.write(template.render(path, template_values))
 
 
@@ -89,13 +108,11 @@ class Item(webapp.RequestHandler):
 			'issue': issue,
 			'issue_id' : issue.key().id(),
 			'existingCauses' : existingCauses,
-			'currentUser' : users.get_current_user(),
-			'url': url,
-			'url_linktext': url_linktext,
-			'login_header': login_header,
 			}
-
-		path = os.path.join(os.path.dirname(__file__), 'index.html')
+		
+		addLoginValues(self, template_values)
+		
+		path = os.path.join(os.path.dirname(__file__), 'issue.html')
 		self.response.out.write(template.render(path, template_values))
 
 class Agree(webapp.RequestHandler):
@@ -169,14 +186,14 @@ class TreeRoot(webapp.RequestHandler):
 			rootGiven = false
 			
 		childs = Issue.filter("causedIssue=", root ).order("agreedBy")
-		TODO: RENDER SUB-TREE
-	
+		
 
 application = webapp.WSGIApplication([('/', MainPage),
+									('/random', Random),
 									('/newIssue', NewIssue),
 									('/agree', Agree),
 									('/issue', Item),
-									('/tree', Tree)],
+									('/tree', TreeRoot)],
 									debug=True)
 
 def main():

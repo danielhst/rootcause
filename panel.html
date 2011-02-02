@@ -1,0 +1,63 @@
+<html>
+	<head>
+	<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		<script type="text/javascript" src="/scripts/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/scripts/main.js"/></script>
+	</head>
+	<body>
+	<div class="login">
+	<b>{{ login_header }}</b>
+	<a href="{{ url }}">{{ url_linktext }}</a>
+	</div>
+	<br/>
+	<div id="container">
+		{% if issue.causedIssue %}
+		<div id="leftpanel">
+			<b class="tittle">Causa original</b>
+			<div class="causado box_round_shadow" issueid="{{ issue.causedIssue.key.id }}">
+				<b class="autor">{% if issue.causedIssue.author %} {{ issue.causedIssue.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
+				<a class="desc">{{ issue.causedIssue.desc|escape }}</a>
+			</div>
+		</div>
+		{% endif %}
+		
+		<div id="rightpanel">
+			<b class="tittle">Causas encontradas</b>
+			<div class="causa novacausa box_round_shadow" style="display:none">
+				<b class="autor">{% if currentUser %} {{ currentUser.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
+				<a class="desc"></a>
+			</div>
+			{% for cause in existingCauses %}
+				<div class="causa box_round_shadow" issueid="{{ cause.key.id }}">
+					<div style="width:90%">
+						<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
+						<a class="desc">{{ cause.desc|escape }}</a>
+					</div>
+					<div>
+						<a class="agree" title="Concordo!">({{ cause.agreedBy }})</a>
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+
+		
+		<div id="pergunta">
+			<div id="next"><a  href ="/random" >Outra pergunta >></a></div>
+			<br/>
+			<h2>Por que {{ issue.desc }}?</h2>
+			<b class="autor" style="float:right; margin-bottom:5px">({% if issue.author %} {{ issue.author.nickname }}{% else %}An&ocirc;nimo{% endif %})</b>
+			<i class="timesasked" >j&aacute; perguntado {{ issue.totalAsked }} vezes</i>
+			<form action="/newIssue" method="post">
+			<div><textarea name="newCause" maxlength="90"></textarea></div>
+			<div><input type="submit" class="button" value="Enviar"/></div>
+			<div class="mail">
+				<a href="mailto:rootcauserio@gmail.com">o que voc&ecirc; achou?</a>
+				<br/>
+				<i>rootcauserio@gmail.com</i>
+			</div>
+			{% if issue.is_saved %}<input name="parentIssueKey" type="hidden" value="{{ issue.key.id }}"/>{% endif %}
+			</form>
+		</div>
+	</div>
+	</body>
+</html>
