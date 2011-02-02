@@ -1,0 +1,22 @@
+<html>
+	<head>
+	<link type="text/css" rel="stylesheet" href="/css/style.css" />
+		<script type="text/javascript" src="/scripts/jquery-1.4.4.min.js"></script>
+		<script type="text/javascript" src="/scripts/main.js"/></script>
+	</head>
+	<body>
+	<div class="login">
+	<b>{{ login_header }}</b>
+	<a href="{{ url }}">{{ url_linktext }}</a>
+	</div>
+	<br/>
+	<div id="container">
+		{% for l in leafs %}
+			<div class="causa" style="position:absolute; width:180px; left:{{ l.leafColumn }}px; top:{{ l.leafRow }}px" issueid="{{ l.key.id }}">
+				<div style="width:90%"> <a class="desc">{{ l.desc|escape }}</a> </div>
+				<div> <a class="agree" title="Concordo!">({{ l.agreedBy }})</a> </div>
+			</div>
+		{% endfor %}
+	</div>
+	</body>
+</html>

@@ -14,7 +14,7 @@
 		{% if issue.causedIssue %}
 		<div id="leftpanel">
 			<b class="tittle">Causa original</b>
-			<div class="causado" issueid="{{ issue.causedIssue.key.id }}">
+			<div class="causado box_round_shadow" issueid="{{ issue.causedIssue.key.id }}">
 				<b class="autor">{% if issue.causedIssue.author %} {{ issue.causedIssue.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
 				<a class="desc">{{ issue.causedIssue.desc|escape }}</a>
 			</div>
@@ -23,12 +23,12 @@
 		
 		<div id="rightpanel">
 			<b class="tittle">Causas encontradas</b>
-			<div class="causa novacausa" style="display:none">
+			<div class="causa novacausa box_round_shadow" style="display:none">
 				<b class="autor">{% if currentUser %} {{ currentUser.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
 				<a class="desc"></a>
 			</div>
 			{% for cause in existingCauses %}
-				<div class="causa" issueid="{{ cause.key.id }}">
+				<div class="causa box_round_shadow" issueid="{{ cause.key.id }}">
 					<div style="width:90%">
 						<b class="autor">{% if cause.author %} {{ cause.author.nickname }}{% else %}An&ocirc;nimo{% endif %}:</b> 
 						<a class="desc">{{ cause.desc|escape }}</a>
@@ -44,7 +44,7 @@
 		<div id="pergunta">
 			<div id="next"><a  href ="/" >Outra pergunta >></a></div>
 			<br/>
-			<h2>Porque {{ issue.desc }}?</h2>
+			<h2>Por que {{ issue.desc }}?</h2>
 			<b class="autor" style="float:right; margin-bottom:5px">({% if issue.author %} {{ issue.author.nickname }}{% else %}An&ocirc;nimo{% endif %})</b>
 			<i class="timesasked" >j&aacute; perguntado {{ issue.totalAsked }} vezes</i>
 			<form action="/newIssue" method="post">

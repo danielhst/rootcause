@@ -110,7 +110,9 @@ form textarea{
 	margin-bottom: 5px;
 	padding: 10px;
 	width: 95%;
-	
+}
+
+.box_round_shadow{
 	/* CSS 3.0 */
 	border-bottom-left-radius: 5px 5px;
 	border-bottom-right-radius: 20px 10px;
@@ -124,8 +126,8 @@ form textarea{
 	
 	/* WEBKIT HACK */ 
 	-webkit-box-shadow:3px 3px 7px #333; 
-	
 }
+
 
 .autor{
 	font-size:0.7em;
@@ -165,21 +167,6 @@ form textarea{
 .causado{
 	background-color: #D89;
 	padding: 10px;
-
-	/* CSS 3.0 */
-	border-bottom-left-radius: 5px 5px;
-	border-bottom-right-radius: 20px 10px;
-	border-top-left-radius: 20px 10px;
-	border-top-right-radius: 5px 5px;
-	box-shadow: 3px 3px 7px #777;
-	
-	/* FIREFOX HACK */
-	-moz-border-radius: 20px 5px 20px 5px;
-	-moz-box-shadow: 3px 3px 7px #777;
-	
-	/* WEBKIT HACK */ 
-	-webkit-box-shadow:3px 3px 7px #333; 
-	
 }
 
 .agree{

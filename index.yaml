@@ -15,3 +15,8 @@ indexes:
   - name: causedIssue
   - name: agreedBy
     direction: desc
+
+- kind: Issue
+  properties:
+  - name: totalCauses
+  - name: causedIssue

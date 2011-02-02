@@ -17,6 +17,11 @@ class Issue(db.Model):
 	totalCauses = db.IntegerProperty(default=0)
 	totalAsked = db.IntegerProperty(default=0)
 	priority = db.IntegerProperty(default=0)
+	depth = db.IntegerProperty()
+	def evalDepth(self):
+		if self.causedIssue:
+			return self.causedIssue.evalDepth() + 1 
+		return 0
 
 def error(handler, message):	
 	path = os.path.join(os.path.dirname(__file__), 'error.html')
@@ -117,6 +122,7 @@ class NewIssue(webapp.RequestHandler):
 			issue.author = users.get_current_user()
 
 		issue.desc = self.request.get('newCause')
+		issue.depth = 0
 		if self.request.get('parentIssueKey') != '':
 			parentKey = db.Key.from_path('Issue', int(self.request.get('parentIssueKey')))
 			issue.causedIssue = Issue.get(parentKey)
@@ -124,17 +130,53 @@ class NewIssue(webapp.RequestHandler):
 			issue.causedIssue.totalCauses += 1
 			issue.causedIssue.priority += 1 #lower the priority when a cause is proposed
 			issue.causedIssue.put()
+			issue.depth = issue.causedIssue.depth + 1
 		issue.put()
 		self.redirect('/issue?id=' + str( issue.key().id() ))
 
-class Tree(webapp.RequestHandler):		
+		
+class TreeLeafs(webapp.RequestHandler):		
 	def get(self):
+		counter = 0;
+		leafs = Issue.all().filter("totalCauses =", 0).order("causedIssue")
+		result = []
+		for l in leafs:
+			if not l.depth:
+				l.depth = l.evalDepth()
+				l.put()
+			
+			setattr(l, "leafColumn", counter * 200 )
+			setattr(l, "leafRow", l.depth * 150 )
+			
+			depth = l.depth	
+			result.append(l)
+			counter += 1
+			
+		template_values={
+			'leafs': result,
+			}
+
+		path = os.path.join(os.path.dirname(__file__), 'tree.html')
+		self.response.out.write(template.render(path, template_values))
 		
-		
+
+class TreeRoot(webapp.RequestHandler):	
+	def get(self):
+		root = db.get(db.Key.from_path('Issue',int(self.request.get("id"))))
+		rootGiven = true
+		if not root: 
+			root = Issue.all().filter("depth=", 0).get()
+			rootGiven = false
+			
+		childs = Issue.filter("causedIssue=", root ).order("agreedBy")
+		TODO: RENDER SUB-TREE
+	
+
 application = webapp.WSGIApplication([('/', MainPage),
 									('/newIssue', NewIssue),
 									('/agree', Agree),
-									('/issue', Item)],
+									('/issue', Item),
+									('/tree', Tree)],
 									debug=True)
 
 def main():
